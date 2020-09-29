@@ -21,6 +21,28 @@ CONNECTIONREPO=${SCRIPTHOME}/connections/
 
 #Keeps all EMS Scripts
 EMSSCRIPTSREPO=${SCRIPTHOME}/scripts/
+EMSSERVERINFO=${EMSSCRIPTSREPO}/server_info.sh
+
+#Template for EMS specific script
+EMSCONNECTIONTEMPLATE="_show_connections.sh"
+EMSDELTECONNECTIONTEMPLATE="_del_user_connections.sh"
+
+#Keep all temporary connections files 
+TEMPDIR=${SCRIPTHOME}/temp
+
+#Snapshots file
+TEMPCONNECTIONSNAP="_connection_snap.txt"
+TEMPSERVERINFOSNAP="_server_info_snap.txt"
+
+#Keep the config from where to delete connections 
+CONFIGDIR=${SCRIPTHOME}/config
+CONFIGFILE=${CONFIGDIR}/ems_config.txt
+####################################################################
+# ENV|EMSURL|USERNAME|HOSTPREFIX
+# ENV|EMSURL|USERNAME|HOSTPREFIX
+####################################################################
+
+
 
 #
 EMSURLS=
@@ -37,7 +59,31 @@ function logger()
 
 }
 
+#Start the script function
+function start_script()
+{
+        logger
+        logger "##############################################################################"
+        logger $(date)" | Starting Delete Connection Script"
+        logger "##############################################################################"
+        logger
 
+}
+
+
+#Exit function
+function exit_script()
+{
+        #logger "##############################################################################"
+        logger $(date)" | Ending Delete Connection Script"
+        logger "##############################################################################"
+        logger
+        exit
+}
+
+
+
+#check if necessary directories are present
 function check_dir_creation()
 {
         if [ ! -d ${LOGDIR} ]
@@ -58,10 +104,46 @@ function check_dir_creation()
                 mkdir -p ${CONNECTIONREPO}
                 logger "Created EMS Connections Repo : "${CONNECTIONREPO}
         fi
-
+        
+        if [ ! -d ${TEMPDIR} ]
+        then
+                mkdir -p ${TEMPDIR}
+                logger "Created Temp Directory : "${TEMPDIR}
+        fi
+        
+        if [ ! -d ${CONFIGDIR} ]
+        then
+                mkdir -p ${CONFIGDIR}
+                logger "Created Config Directory : "${CONFIGDIR}
+        fi
 
 }
 
+
+#check if necessary scripts are present
+function check_scripts()
+{
+
+        if [ ! -f ${EMSSERVERINFO} ]
+        then
+                logger "Created server info script : "${EMSSERVERINFO}
+                echo "show info" > ${EMSSERVERINFO}
+        fi
+
+}
+
+
+#check if necessary configs are present
+function check_configs()
+{
+
+        if [ ! -f ${CONFIGFILE} ]
+        then
+                logger "MIssing config file : "${CONFIGFILE}
+                exit_script
+        fi
+
+}
 
 
 #is_active $TIBEMSADMIN $URL $USER $PWD $SCRIPT
@@ -115,3 +197,5 @@ function connectionStatus(){
 
        EMS1=`echo ${url} | awk -F"," '{print $1}'`
         EMS2=`echo ${url} | awk -F"," '{print $2}'`
+
+
