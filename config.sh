@@ -25,6 +25,7 @@ CONNECTION_REPO=${SCRIPT_HOME}/connections/
 #Keeps all EMS Scripts
 EMS_SCRIPTS_REPO=${SCRIPT_HOME}/scripts/
 EMS_SERVER_INFO=${EMS_SCRIPTS_REPO}/server_info.sh
+EMS_CONNECTIONS_INFO=${EMS_SCRIPTS_REPO}/connections_info.sh
 
 #Template for EMS specific script
 EMS_CONN_SCRIPT_TEMPLATE="_show_connections.sh"
