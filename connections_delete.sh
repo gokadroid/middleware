@@ -151,25 +151,35 @@ function check_configs()
 function is_active()
 {
         TIBEMSADMIN=${1}
-        EMS=${2}
+        #EMS=${2}
+        EMS1=`echo ${2} | awk -F"," '{print $1}'`
+        EMS2=`echo ${2} | awk -F"," '{print $2}'`
+                
         USER=${3}
         PWD=${4}
         SCRIPT=${5}
         
-        EMSSTATE=`${TIBEMSADMIN} -server ${EMS} -user ${USER} -password ${PWD} -script ${SCRIPT} -ignore | grep State | awk '{print $2}'`
- 
+        logger " | Checking active server between "${EMS1}" and "${EMS2}
+        
+        EMSSTATE1=`${TIBEMSADMIN} -server ${EMS1} -user ${USER} -password ${PWD} -script ${SCRIPT} -ignore | grep State | awk '{print $2}'`
+        EMSSTATE2=`${TIBEMSADMIN} -server ${EMS2} -user ${USER} -password ${PWD} -script ${SCRIPT} -ignore | grep State | awk '{print $2}'`
+        
 
         #If connection or any other error connecting to EMS
-        if [ ! -z ${EMSSTATE} ]
-        then
-                echo "ERROR-ACTIVE-STATE"
-        elif [ ${EMS1STATE} = 'active' ]
+        if [ ${EMSSTATE1} = 'active' ]
         then
         #If ems is active
-                echo ${EMSSTATE}
+                EMS1NAME=`${TIBEMSADMIN} -server ${EMS1} -user ${USER} -password ${PWD} -script ${SCRIPT} -ignore | grep "Server:" | awk '{print $2}' | sed "s/\ //g"`
+                echo ${EMS1}"|"${EMS1NAME}
+                
+        elif [ ${EMSSTATE2} = 'active' ]
+        then
+                EMS2NAME=`${TIBEMSADMIN} -server ${EMS2} -user ${USER} -password ${PWD} -script ${SCRIPT} -ignore | grep "Server:" | awk '{print $2}' | sed "s/\ //g"`
+                echo ${EMS2}"|"${EMS2NAME}
+                
         else
         #EMS state is neither error or active
-                echo "FT"                
+                echo "ERROR-ACTIVE-STATE|ERROR-ACTIVE-STATE"
         fi
 
 }
@@ -196,7 +206,28 @@ function connectionStatus(){
         echo "Connection Snapshot Complete!"
 }
 
-       EMS1=`echo ${url} | awk -F"," '{print $1}'`
-        EMS2=`echo ${url} | awk -F"," '{print $2}'`
 
 
+function main()
+{
+        cat ${CONFIGFILE} | grep ${ENV} | while read line
+        do
+                ####################################################################
+                # ENV|EMSURL|USERNAME|HOSTPREFIX
+                # ENV|EMSURL|USERNAME|HOSTPREFIX
+                ####################################################################
+                URL=`echo ${line} | awk -F"|" '{print $2}'`
+                USERNAME=`echo ${line} | awk -F"|" '{print $3}'`
+                HOSTPREFIX=`echo ${line} | awk -F"|" '{print $4}'`
+                
+                #active_ems $TIBEMSADMIN $URL $USER $PWD $SCRIPT returns URL|EMSNAME
+                URL_AND_NAME=`active_ems ${TIBEMSADMIN} ${URL} ${USER} ${PWD} ${EMSSERVERINFO}`
+                
+                #Use url to find connections for username and hostprefix and use the name to name all temp files and scripts
+                
+               # From connections filter the connection ids and build delete script of connection ids
+               
+               # Execute the delete connections script
+
+        done
+}
