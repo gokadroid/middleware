@@ -55,7 +55,7 @@ ENV=
 function logger()
 {
 #       echo "$@"
-        echo "$@" >> ${LOGDIR}/${LOGFILEPREFIX}${LOGDATE}.log
+        echo $(date)"$@" >> ${LOGDIR}/${LOGFILEPREFIX}${LOGDATE}.log
 
 }
 
@@ -64,7 +64,7 @@ function start_script()
 {
         logger
         logger "##############################################################################"
-        logger $(date)" | Starting Delete Connection Script"
+        logger " | Starting Delete Connection Script"
         logger "##############################################################################"
         logger
 
@@ -75,7 +75,7 @@ function start_script()
 function exit_script()
 {
         #logger "##############################################################################"
-        logger $(date)" | Ending Delete Connection Script"
+        logger " | Ending Delete Connection Script"
         logger "##############################################################################"
         logger
         exit
@@ -89,32 +89,32 @@ function check_dir_creation()
         if [ ! -d ${LOGDIR} ]
         then
                 mkdir -p ${LOGDIR}
-                logger "Created Script Log Directory : "${LOGDIR}
+                logger " | Created Script Log Directory : "${LOGDIR}
         fi
 
         if [ ! -d ${EMSSCRIPTSREPO} ]
         then
                 
                 mkdir -p ${EMSSCRIPTSREPO}
-                logger "Created EMS Script Repo : "${EMSSCRIPTSREPO}
+                logger " | Created EMS Script Repo : "${EMSSCRIPTSREPO}
         fi
 
         if [ ! -d ${CONNECTIONREPO} ]
         then
                 mkdir -p ${CONNECTIONREPO}
-                logger "Created EMS Connections Repo : "${CONNECTIONREPO}
+                logger " | Created EMS Connections Repo : "${CONNECTIONREPO}
         fi
         
         if [ ! -d ${TEMPDIR} ]
         then
                 mkdir -p ${TEMPDIR}
-                logger "Created Temp Directory : "${TEMPDIR}
+                logger " | Created Temp Directory : "${TEMPDIR}
         fi
         
         if [ ! -d ${CONFIGDIR} ]
         then
                 mkdir -p ${CONFIGDIR}
-                logger "Created Config Directory : "${CONFIGDIR}
+                logger " | Created Config Directory : "${CONFIGDIR}
         fi
 
 }
@@ -126,8 +126,9 @@ function check_scripts()
 
         if [ ! -f ${EMSSERVERINFO} ]
         then
-                logger "Created server info script : "${EMSSERVERINFO}
+                
                 echo "show info" > ${EMSSERVERINFO}
+                logger " | Created server info script : "${EMSSERVERINFO}
         fi
 
 }
@@ -139,7 +140,7 @@ function check_configs()
 
         if [ ! -f ${CONFIGFILE} ]
         then
-                logger "MIssing config file : "${CONFIGFILE}
+                logger " | Missing config file : "${CONFIGFILE}
                 exit_script
         fi
 
