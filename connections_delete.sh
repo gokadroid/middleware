@@ -63,34 +63,44 @@ function check_dir_creation()
 }
 
 
-#is_active $TIBEMSADMIN $URL $USER $PWD
+
+#is_active $TIBEMSADMIN $URL $USER $PWD $SCRIPT
 function is_active()
 {
-        EMS1=`echo ${url} | awk -F"," '{print $1}'`
-        EMS2=`echo ${url} | awk -F"," '{print $2}'`
+        TIBEMSADMIN=${1}
+        EMS=${2}
+        USER=${3}
+        PWD=${4}
+        SCRIPT=${5}
+        
+        EMSSTATE=`${TIBEMSADMIN} -server ${EMS} -user ${USER} -password ${PWD} -script ${SCRIPT} -ignore | grep State | awk '{print $2}'`
+ 
 
-
-        EMS1STATE=`echo "i" | ${ADMINTOOL} -server ${EMS1} -user ${USER} -password ${PWD} | grep State | awk '{print $2}'`
-        EMS2STATE=`echo "i" | ${ADMINTOOL} -server ${EMS2} -user ${USER} -password ${PWD} | grep State | awk '{print $2}'`
-
-        EMSTOUSE=${EMS2}
-
-        if [ ${EMS1STATE} = 'active' ]
+        #If connection or any other error connecting to EMS
+        if [ ! -z ${EMSSTATE} ]
         then
-                EMSTOUSE=${EMS1}
-        elif [ ${EMS2STATE} = 'active' ]
+                echo "ERROR-ACTIVE-STATE"
+        elif [ ${EMS1STATE} = 'active' ]
         then
-                EMSTOUSE=${EMS2}
+        #If ems is active
+                echo ${EMSSTATE}
         else
-                echo "None of the EMS active for : "${url}
-                continue
+        #EMS state is neither error or active
+                echo "FT"                
         fi
 
 }
 
-#find_aota_connections $TIBEMSADMIN $ACTIVEURL $USER $PWD
-function find_aota_connections()
+#find_aota_connections $TIBEMSADMIN $ACTIVEURL $USER $PWD $SCRIPT
+function run_ems_script()
 {
+        TIBEMSADMIN=${1}
+        EMS=${2}
+        USER=${3}
+        PWD=${4}
+        SCRIPT=${5}
+        
+        ${TIBEMSADMIN} -server ${EMS} -user ${USER} -password ${PWD} -script ${SCRIPT} -ignore
 
 }
 
@@ -102,3 +112,6 @@ function connectionStatus(){
         echo "show connections full" | $1 -server $2 -user $3 -password $4 | sed '1,10d' | grep -v "SASB Pre Dlv" | awk '{print $7" "$8" "$9}' | grep -v ${2} | sort -n | uniq -c
         echo "Connection Snapshot Complete!"
 }
+
+       EMS1=`echo ${url} | awk -F"," '{print $1}'`
+        EMS2=`echo ${url} | awk -F"," '{print $2}'`
