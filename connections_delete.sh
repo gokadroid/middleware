@@ -78,10 +78,17 @@ function check_scripts()
         if [ ! -f ${EMS_SERVER_INFO} ]
         then
                 
-                echo "show info" > ${EMS_SERVER_INFO}
+                echo "info" > ${EMS_SERVER_INFO}
                 logger " | Created server info script : "${EMS_SERVER_INFO}
         fi
-
+	
+	
+	if [ ! -f ${EMS_CONNECTIONS_INFO} ]
+        then
+                
+                echo "show connections full" > ${EMS_CONNECTIONS_INFO}
+                logger " | Created server info script : "${EMS_CONNECTIONS_INFO}
+        fi
 }
 
 
