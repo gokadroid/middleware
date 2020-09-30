@@ -5,17 +5,20 @@
 
 # create user t_user "testing" password=""
 # grant admin t_user view-server, view-connection, change-connection
-# 
+#
 
 #Package Name
 MAINDIR=
 
 #Base directory
-SCRIPT_HOME=/opt/scripts
+#SCRIPT_HOME=/opt/scripts
+
+SCRIPT_HOME=/opt/Scripts/delete_connections/
 LOGS_HOME=/opt/script_logs/
 
+
 #Keeps all the logs
-LOG_DIR=${LOGS_HOME}/logs/
+LOG_DIR=${LOGS_HOME}/delete_connections/
 LOG_DATE=$(date +"%Y%m%d")
 LOG_FILE_PREFIX="ta_del_connections_"
 
@@ -31,14 +34,14 @@ EMS_CONNECTIONS_INFO=${EMS_SCRIPTS_REPO}/connections_info.sh
 EMS_CONN_SCRIPT_TEMPLATE="_show_connections.sh"
 EMS_CONN_DEL_SCRIPT_TEMPLATE="_del_user_connections.sh"
 
-#Keep all temporary connections files 
+#Keep all temporary connections files
 TEMP_DIR=${SCRIPT_HOME}/temp
 
 #Snapshots file
 TEMP_CONN_SNAP_FILE_SUFFIX="_connection_snap.txt"
 TEMP_SERVER_SNAP_FILE_SUFFIX="_server_info_snap.txt"
 
-#Keep the config from where to delete connections 
+#Keep the config from where to delete connections
 CONFIG_DIR=${SCRIPT_HOME}/config
 CONFIG_FILE=${CONFIG_DIR}/ems_config.txt
 ####################################################################
@@ -49,10 +52,9 @@ CONFIG_FILE=${CONFIG_DIR}/ems_config.txt
 #Error string which script will return when ems is not active
 ERROR_STATE="ERROR-ACTIVE-STATE|ERROR-ACTIVE-STATE"
 
-#
-EMS_URLS=
-EMS_HOME=/tibco/ems/8.3/bin/
+#EMS related configs
+EMS_HOME=/opt/tibco/ems/8.3/bin/
 TIBEMSADMIN=${EMS_HOME}/tibemsadmin
-USER=
-PASSWORD_FILE=
-ENV=
+USER=my_user
+PASSWORD_FILE=${CONFIG_DIR}/cred.txt
+ENV=STG
