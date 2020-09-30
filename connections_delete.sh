@@ -64,11 +64,11 @@ function check_dir_creation()
                 logger " | Created EMS Script Repo : "${EMS_SCRIPTS_REPO}
         fi
 
-        if [ ! -d ${CONNECTION_REPO} ]
-        then
-                mkdir -p ${CONNECTION_REPO}
-                logger " | Created EMS Connections Repo : "${CONNECTION_REPO}
-        fi
+        #if [ ! -d ${CONNECTION_REPO} ]
+        #then
+        #        mkdir -p ${CONNECTION_REPO}
+        #        logger " | Created EMS Connections Repo : "${CONNECTION_REPO}
+        #fi
 
         if [ ! -d ${TEMP_DIR} ]
         then
@@ -251,7 +251,8 @@ function main()
                 # Template for EMS specific script
                 # EMS_CONN_DEL_SCRIPT_TEMPLATE="_del_user_connections.sh"
 
-                CONNECTION_SCRIPT=${EMS_SCRIPTS_REPO}/${ACTIVE_EMS_NAME}${EMS_CONN_DEL_SCRIPT_TEMPLATE}
+                #CONNECTION_SCRIPT=${EMS_SCRIPTS_REPO}/${ACTIVE_EMS_NAME}${EMS_CONN_DEL_SCRIPT_TEMPLATE}
+                CONNECTION_SCRIPT=${EMS_SCRIPTS_REPO}/${ACTIVE_EMS_NAME}"_"${USERNAME}"_"${HOSTPREFIX}"_"${EMS_CONN_DEL_SCRIPT_TEMPLATE}
                 logger " | "
                 logger " | Following Connections Will Be Deleted:"
                 conn_count=0
